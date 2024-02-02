@@ -52,11 +52,15 @@ window.addEventListener('DOMContentLoaded', () => {
 	const deadline = '2024-02-11';
 
 	function getTimeRemaining(endTime) {
+		let days = 0, hours = 0, minutes = 0, seconds = 0;
 		const t = Date.parse(endTime) - Date.parse(new Date());
-		const days = Math.floor(t / (1000 * 60 * 60 * 24));
-		const hours = Math.floor(t / (1000 * 60 * 60) % 24);
-		const minutes = Math.floor((t / 1000 / 60 ) % 60);
-		const seconds = Math.floor((t / 1000 ) % 60);
+
+		if( t > 0) {
+			days = Math.floor(t / (1000 * 60 * 60 * 24));
+			hours = Math.floor(t / (1000 * 60 * 60) % 24);
+			minutes = Math.floor((t / 1000 / 60 ) % 60);
+			seconds = Math.floor((t / 1000 ) % 60);
+		}
 
 		return {
 			total: t,
@@ -94,5 +98,35 @@ window.addEventListener('DOMContentLoaded', () => {
 	}
 
 	setClock('timer', deadline);
+
+	//Modal
+
+	const modalTrigger = document.querySelectorAll('[data-modal]'),
+			modal = document.querySelector('.modal'),
+			modalCloseBtn = document.querySelector('[data-close]');
+
+	modal.addEventListener('click', (e) => {
+		if(e.target === modal) hideModal();
+	})
+
+	modalTrigger.forEach(btn =>
+		btn.addEventListener('click', showModal));
+
+	modalCloseBtn.addEventListener('click', hideModal);
+	document.addEventListener('keydown', (e) => {
+		if(e.code === 'Escape' && modal.classList.contains('show')) hideModal();
+	})
+
+	function showModal() {
+		modal.classList.add('show');
+		modal.classList.remove('hide');
+		document.body.style.overflow = 'hidden';
+	}
+
+	function hideModal() {
+		modal.classList.remove('show');
+		modal.classList.add('hide');
+		document.body.style.overflow = '';
+	}
 
 });
