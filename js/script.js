@@ -141,4 +141,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	window.addEventListener('scroll', showModalByScroll);
 
+	//observer
+	const observerBox = document.querySelector('.observer-box');
+
+	let observer = new MutationObserver(mutations => {
+		console.log(mutations);
+	})
+
+	observer.observe(observerBox, {
+		childList: true
+	})
+
 });
