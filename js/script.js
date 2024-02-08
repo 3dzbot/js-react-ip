@@ -101,7 +101,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	//Modal
 
-	const modalTimerId = setTimeout(showModal, 1200);
+	// const modalTimerId = setTimeout(showModal, 1200);
 
 	const modalTrigger = document.querySelectorAll('[data-modal]'),
 			modal = document.querySelector('.modal'),
@@ -140,5 +140,51 @@ window.addEventListener('DOMContentLoaded', () => {
 	}
 
 	window.addEventListener('scroll', showModalByScroll);
+
+	//class
+
+	class MenuCard {
+		constructor(src, alt, title, desc, price, parentSelector) {
+			this.parent = document.querySelector(parentSelector);
+			this.src = src;
+			this.alt = alt;
+			this.title = title;
+			this.desc = desc;
+			this.price = price;
+			this.transfer = 27;
+
+			this.changeToUAH();
+		}
+
+		changeToUAH() {
+			this.price = this.price * this.transfer;
+		}
+
+		render() {
+			const elem = document.createElement('div');
+			elem.classList.add('menu__item');
+			elem.innerHTML = `
+				<img src="${this.src}" alt="${this.alt}">
+				<h3 class="menu__item-subtitle">${this.title}</h3>
+				<div class="menu__item-descr">${this.desc}</div>
+				<div class="menu__item-divider"></div>
+				<div class="menu__item-price">
+					<div class="menu__item-cost">Цена:</div>
+					<div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+				</div>
+			`;
+			this.parent.append(elem);
+		}
+	}
+
+	new MenuCard(
+			'img/tabs/vegy.jpg',
+			'vegy',
+			'Меню "Фитнес"',
+			'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и' +
+			' здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+			9,
+			'.menu .container'
+	).render();
 
 });
