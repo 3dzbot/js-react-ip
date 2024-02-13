@@ -123,7 +123,7 @@ window.addEventListener('DOMContentLoaded', () => {
 		modal.classList.add('show');
 		modal.classList.remove('hide');
 		document.body.style.overflow = 'hidden';
-		clearInterval(modalTimerId);
+		// clearInterval(modalTimerId);
 	}
 
 	function hideModal() {
