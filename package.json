@@ -1,0 +1,22 @@
+{
+  "name": "food",
+  "version": "1.0.0",
+  "description": "Theme: Полный курс по JavaScript + React - с нуля до результата <br>\r Author: Ivan Petrichenko <br>\r Student: Vasyl",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/3dzbot/js-react-ip.git"
+  },
+  "author": "3dzbot",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/3dzbot/js-react-ip/issues"
+  },
+  "homepage": "https://github.com/3dzbot/js-react-ip#readme",
+  "devDependencies": {
+    "json-server": "^0.16.1"
+  }
+}

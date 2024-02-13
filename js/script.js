@@ -49,7 +49,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	//Timer
 
-	const deadline = '2024-02-11';
+	const deadline = '2024-03-01';
 
 	function getTimeRemaining(endTime) {
 		let days = 0, hours = 0, minutes = 0, seconds = 0;
@@ -176,15 +176,114 @@ window.addEventListener('DOMContentLoaded', () => {
 			this.parent.append(elem);
 		}
 	}
+	//
+	// new MenuCard(
+	// 		'img/tabs/vegy.jpg',
+	// 		'vegy',
+	// 		'Меню "Фитнес"',
+	// 		'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и' +
+	// 		' здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+	// 		9,
+	// 		'.menu .container'
+	// ).render();
 
-	new MenuCard(
-			'img/tabs/vegy.jpg',
-			'vegy',
-			'Меню "Фитнес"',
-			'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и' +
-			' здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-			9,
-			'.menu .container'
-	).render();
+	const dbBasePath = 'db/db.json';
+	const dbLocalPath = 'http://localhost:3000/menu';
+	const dbLocalRequest = 'http://localhost:3000/requests';
+
+
+	getResource(dbLocalPath)
+			.then(data => {
+				data.forEach(({img, altimg, title, descr, price}) => {
+					new MenuCard(img, altimg, title, descr, price, ".menu .container").render();
+				});
+			});
+
+	// Forms
+
+	const forms = document.querySelectorAll('form');
+	const message = {
+		loading: 'img/form/spinner.svg',
+		success: 'Спасибо! Скоро мы с вами свяжемся',
+		failure: 'Что-то пошло не так...'
+	};
+
+	forms.forEach(item => {
+		bindPostData(item);
+	});
+
+	const postData = async (url, data) => {
+		let res = await fetch(url, {
+			method: "POST",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: data
+		});
+
+		return await res.json();
+	};
+
+	async function getResource(url) {
+		let res = await fetch(url);
+
+		if (!res.ok) {
+			throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+		}
+
+		return await res.json();
+	}
+
+	function bindPostData(form) {
+		form.addEventListener('submit', (e) => {
+			e.preventDefault();
+
+			let statusMessage = document.createElement('img');
+			statusMessage.src = message.loading;
+			statusMessage.style.cssText = `
+                display: block;
+                margin: 0 auto;
+            `;
+			form.insertAdjacentElement('afterend', statusMessage);
+
+			const formData = new FormData(form);
+
+			const json = JSON.stringify(Object.fromEntries(formData.entries()));
+
+			postData(dbLocalRequest, json)
+					.then(data => {
+						console.log(data);
+						showThanksModal(message.success);
+						statusMessage.remove();
+					}).catch(() => {
+				showThanksModal(message.failure);
+			}).finally(() => {
+				form.reset();
+			});
+		});
+	}
+
+	function showThanksModal(message) {
+		const prevModalDialog = document.querySelector('.modal__dialog');
+
+		prevModalDialog.classList.add('hide');
+		showModal();
+
+		const thanksModal = document.createElement('div');
+		thanksModal.classList.add('modal__dialog');
+		thanksModal.innerHTML = `
+            <div class="modal__content">
+                <div class="modal__close" data-close>×</div>
+                <div class="modal__title">${message}</div>
+            </div>
+        `;
+		document.querySelector('.modal').append(thanksModal);
+		setTimeout(() => {
+			thanksModal.remove();
+			prevModalDialog.classList.add('show');
+			prevModalDialog.classList.remove('hide');
+			hideModal();
+		}, 4000);
+	}
 
 });
