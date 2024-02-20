@@ -353,13 +353,18 @@ window.addEventListener('DOMContentLoaded', () => {
 		dots[index-1].style.opacity = '1';
 	}
 
+	function getNum(data) {
+		return +data.replace(/\D/g, '');
+	}
+
 	nextBtn.addEventListener('click', () => {
-		if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) {
+		// if (offset == +width.slice(0, width.length - 2) * (slides.length - 1))
+		if (offset == getNum(width) * (slides.length - 1)) {
 			offset = 0;
 			slideIndex = 1;
 			current.textContent = addZero(slideIndex);
 		} else {
-			offset += +width.slice(0, width.length - 2);
+			offset += getNum(width);
 			slideIndex++;
 			current.textContent = addZero(slideIndex);
 		}
@@ -369,11 +374,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	prevBtn.addEventListener('click', () => {
 		if (offset == 0) {
-			offset = +width.slice(0, width.length - 2) * (slides.length - 1)
+			offset = getNum(width) * (slides.length - 1)
 			slideIndex = slides.length;
 			current.textContent = addZero(slideIndex);
 		} else {
-			offset -= +width.slice(0, width.length - 2);
+			offset -= getNum(width);
 			slideIndex--;
 			current.textContent = addZero(slideIndex);
 		}
@@ -386,7 +391,7 @@ window.addEventListener('DOMContentLoaded', () => {
 			const slideTo = e.target.getAttribute('data-slide-to');
 			slideIndex = slideTo;
 
-			offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+			offset = getNum(width) * (slideTo - 1);
 			slidesField.style.transform = `translateX(-${offset}px)`;
 
 			setActiveDot(slideIndex);
@@ -440,7 +445,6 @@ window.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function calcTotal() {
-		console.log(sex, height, weight, age, ratio)
 		if (!sex || !height || !weight || !age || !ratio) {
 			calcResult.textContent = '____';
 			return;
